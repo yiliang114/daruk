@@ -154,7 +154,7 @@ class DarukLoader {
         packet = require(packetName);
         // 有些包导出 export default function
         if (typeof packet !== 'function' &&
-            typeof packet.default === 'function') {
+          typeof packet.default === 'function') {
           packet = packet.default;
         }
       } catch (e) {
@@ -239,7 +239,7 @@ class DarukLoader {
         assert(
           isSubClass(classModule, BaseContext),
           `[${key}] must export a subclass of Daruk.Base${key.charAt(0).toUpperCase() +
-            key.slice(1)} in path: ${path}`
+          key.slice(1)} in path: ${path}`
         );
         modules[name] = classModule;
       }

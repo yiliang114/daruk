@@ -1,5 +1,7 @@
 import assert = require('assert');
 import is = require('is');
+// https://blog.csdn.net/5hongbing/article/details/77740386
+// 元数据反射 ？
 // tslint:disable-next-line
 import 'reflect-metadata';
 import BaseContext from '../core/base_context';

@@ -25,6 +25,7 @@ import wrapMiddlewareUse from './wrap_middleware_use';
 /**
  * @desc daruk 核心类
  * 用 DarukInitModule 类注入
+ * SimpleMixin 函数会将 DarukInitModule 对象上除了构造函数以外的属性都扩展到 DarukCore 对象上
  */
 @SimpleMixin(DarukInitModule)
 class DarukCore extends Koa {
@@ -201,7 +202,7 @@ class DarukCore extends Koa {
       if (typeof _cb === 'function') _cb(...arg1);
       this.prettyLog(
         `${this.name} is starting at http://${options.host ? options.host : 'localhost'}:${
-          options.port
+        options.port
         }`
       );
     };

@@ -6,7 +6,7 @@
 
 import EventEmitter = require('events');
 
-class Events extends EventEmitter {}
+class Events extends EventEmitter { }
 
 const emitter = new Events();
 
