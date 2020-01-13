@@ -41,10 +41,11 @@ class DarukCore extends Koa {
   public globalModule: any;
   public util: any;
   public glue: any;
-  public timer: { [key:string]: CronJob };
+  public timer: { [key: string]: CronJob };
   public context: Daruk.Context;
   public httpServer: any;
   // 覆写 koa 的 createContext 方法声明
+  // @ts-ignore
   public createContext: (req: any, res: any) => Daruk.Context;
   public initEnv: () => void;
   /**
@@ -56,6 +57,7 @@ class DarukCore extends Koa {
     super();
     this.name = name;
     // 保证 context.app 是 daruk 而不是 koa
+    // @ts-ignore
     this.context.app = this;
     // 获取 DarukLoader 加载模块的根目录
     const rootPath = options.rootPath || path.dirname(require.main.filename);
@@ -70,16 +72,20 @@ class DarukCore extends Koa {
     this.options.customLogger = options.customLogger = customLogger;
 
     // 初始化 logger
-    this.logger =new KoaLogger.logger(this.options.loggerOptions);
+    this.logger = new KoaLogger.logger(this.options.loggerOptions);
     // 初始化this.logger为customLogger
-    if(Object.getOwnPropertyNames(customLogger).length > 0) this.logger = customLogger;
-   
-    // 初始化装饰器与 daurk 实例之间的桥梁
+    if (customLogger && Object.getOwnPropertyNames(customLogger).length > 0) {
+      this.logger = customLogger;
+    }
+
+    // 初始化装饰器与 daruk 实例之间的桥梁
+    // @ts-ignore
     helpDecoratorClass.init(this);
 
     // 用于保存 DarukLoader 加载的模块
     this.module = {};
     this.initExitHook();
+    // @ts-ignore
     wrapMiddlewareUse(this);
 
     // tslint:disable-next-line
