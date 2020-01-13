@@ -1,6 +1,6 @@
 {
   "name": "daruk",
-  "version": "0.5.9",
+  "version": "0.6.1",
   "description": "a node.js web framework",
   "main": "build/index.js",
   "scripts": {
@@ -37,6 +37,7 @@
     "@types/mocha": "^5.2.5",
     "@types/sinon": "^7.0.10",
     "@types/supertest": "^2.0.7",
+    "@types/url-join": "^4.0.0",
     "all-contributors-cli": "^6.3.1",
     "chai": "^4.1.2",
     "codecov": "^3.5.0",
@@ -54,22 +55,24 @@
     "typescript": "^3.0.1"
   },
   "dependencies": {
+    "@types/cron": "^1.7.1",
     "@types/koa": "^2.0.46",
     "@types/koa-router": "^7.0.37",
     "@types/node": "^10.12.18",
-    "@types/url-join": "^4.0.0",
     "chalk": "^2.4.1",
     "convert-hrtime": "^2.0.0",
-    "cron": "^1.4.1",
+    "cron": "^1.7.1",
     "daruk-exit-hook": "^0.3.0",
-    "daruk-logger": "^1.9.1",
-    "daruk-request-id": "0.4.3",
+    "daruk-logger": "^1.10.0",
+    "daruk-request-id": "^0.4.3",
     "htmlspecialchars": "^1.0.5",
     "http-server-shutdown": "^1.1.2",
     "is": "^3.3.0",
     "koa": "^2.5.2",
     "koa-body": "^4.1.0",
     "koa-router": "^7.4.0",
+    "lodash": "^4.17.13",
+    "mixin-deep": "^2.0.1",
     "object-assign-deep": "^0.4.0",
     "reflect-metadata": "^0.1.13",
     "upath": "^1.1.2",
@@ -94,5 +97,10 @@
     ],
     "sourceMap": true,
     "instrument": true
-  }
+  },
+  "files": [
+    "types",
+    "build",
+    "LICENSE"
+  ]
 }
