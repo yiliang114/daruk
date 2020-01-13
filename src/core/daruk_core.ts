@@ -74,7 +74,7 @@ class DarukCore extends Koa {
     // 初始化this.logger为customLogger
     if(Object.getOwnPropertyNames(customLogger).length > 0) this.logger = customLogger;
    
-    // 初始化装饰器与 daurk 实例之间的桥梁
+    // 初始化装饰器与 daruk 实例之间的桥梁
     helpDecoratorClass.init(this);
 
     // 用于保存 DarukLoader 加载的模块
