@@ -39,7 +39,7 @@ export default class DarukInitModule {
   public globalModule: any;
   public util: any;
   public glue: any;
-  public timer: { [key:string]: CronJob };
+  public timer: { [key: string]: CronJob };
   public context: Daruk.Context;
   public router: any;
   public prettyLog: (msg: string, ext?: { type?: string; level?: string; init?: boolean }) => void;
@@ -50,13 +50,17 @@ export default class DarukInitModule {
    */
   public initEnv() {
     const { options } = this;
+    // this == new DarukCore()
     // @ts-ignore
     const loader = new DarukLoader(this);
 
+    // 自动加载模块内容。 TODO: configPath ?
     loader.loadConfig(options.configPath);
     Events.emit('configLoaded', this);
+    // 挂载 config 信息到 daruk 和 ctx
     this.initConfig();
 
+    // options.darukConfigPath
     loader.loadDarukConfig(options.darukConfigPath);
     Events.emit('darukConfigLoaded', this);
     this.initGlobalModule();
@@ -94,6 +98,7 @@ export default class DarukInitModule {
    * @desc 挂载 config 到 daruk 和 ctx
    */
   private initConfig() {
+    // 挂载 config 到 daruk 实例上以及 context 上
     this.config = this.context.config = this.module.config;
     this.prettyLog('', { type: 'config', init: true });
   }
@@ -137,6 +142,8 @@ export default class DarukInitModule {
     // if (this.options.monitor.enable) {
     //   middlewareOrder.unshift('daruk_monitor');
     // }
+
+    // TODO: daruk 默认的中间件列表, 从开头压入新的中间件
     middlewareOrder.unshift(
       'daruk_request_id',
       'daruk_logger',
@@ -144,16 +151,19 @@ export default class DarukInitModule {
       'daruk_context_loader'
     );
 
+    // TODO: 为什么不是直接 this.module.middlewareOrder.unshift([...]) 呢
     // 再次保存 middlewareOrder，使外部对最终的 middlewareOrder 可见
     this.module.middlewareOrder = middlewareOrder;
     // tslint:disable-next-line
     const self = this;
     middlewareOrder.forEach(function useMiddleware(name: string) {
+      // TODO: this.module.middleware 与 this.module.middlewareOrder 有什么区别？
       const middleware = self.module.middleware[name];
       assert(is.undefined(middleware) === false, `[middleware] ${name} is not found`);
       // 有些中间件是直接修改 koa 实例，不会返回一个函数
       // 因此只 use 函数类型的中间件
       if (isFn(middleware)) {
+        // TODO: koa(app).use 直接调用中间件 ？
         self.use(middleware, name);
       }
     });
@@ -216,9 +226,7 @@ export default class DarukInitModule {
               // 判断路由是否重复定义
               assert(
                 routeMap[method].indexOf(routePath) === -1,
-                `[router] duplicate routing definition in ${
-                  ControllerClass.name
-                }.${funcName}: ${routePath}`
+                `[router] duplicate routing definition in ${ControllerClass.name}.${funcName}: ${routePath}`
               );
               // 保存路由 path
               routeMap[method].push(routePath);
@@ -288,7 +296,7 @@ export default class DarukInitModule {
    * @desc 初始化定时器
    */
   private initTimer() {
-    const timerInstance: { [key:string]: CronJob } = {};
+    const timerInstance: { [key: string]: CronJob } = {};
     this.timer = this.context.timer = timerInstance;
 
     let timer = this.module.timer || {};

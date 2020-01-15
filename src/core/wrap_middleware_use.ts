@@ -21,7 +21,9 @@ function wrapUse(fn: Function, name: string) {
 }
 
 function enterMid(ctx: any) {
+  // 获取保存在 ctx 中的时间
   let time = getTimeInfo(ctx);
+  // TODO: 推入当前时间
   time.list.push(getHrTime());
 }
 

@@ -15,6 +15,7 @@ function createDecorator(moduleName: string) {
     return (proto: any, propertyKey: string) => {
       Object.defineProperty(proto, propertyKey, {
         get: () => {
+          // 获取 app.moduleName
           let res = helpDecoratorClass.getModule(moduleName);
           assert(
             res !== undefined,
@@ -40,6 +41,7 @@ function createDecorator(moduleName: string) {
  */
 function loggerDecorator(fileInfo?: string) {
   return (proto: any, propertyKey: string) => {
+    // 获取 logger 模块
     const logger = helpDecoratorClass.getModule('logger');
     if (fileInfo === undefined) {
       proto[propertyKey] = logger;

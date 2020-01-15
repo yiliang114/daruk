@@ -67,6 +67,8 @@ class DarukCore extends Koa {
     const customLogger = options.customLogger;
     // customLogger 可能是一个类，不能进行 deep assign
     delete options.customLogger;
+    // TODO: 但是为什么不浅层拷贝 ？ 为啥需要深度拷贝 ？
+    // 最终 daruk 的 config 是 defaultOptions 与 options 的合并
     this.options = deepAssign({}, defaultOptions, options);
     // 还原被 delete 的 customLogger
     this.options.customLogger = options.customLogger = customLogger;
@@ -78,13 +80,15 @@ class DarukCore extends Koa {
       this.logger = customLogger;
     }
 
-    // 初始化装饰器与 daruk 实例之间的桥梁
+    // 初始化装饰器与 daruk 实例之间的桥梁。 相当于注入了一个 app 保存起来，用于其他部分用于装饰器的推导。
     // @ts-ignore
     helpDecoratorClass.init(this);
 
     // 用于保存 DarukLoader 加载的模块
     this.module = {};
+    // 初始化退出钩子（不执行）
     this.initExitHook();
+    // TODO: 记录中间件调用的时间 ？
     // @ts-ignore
     wrapMiddlewareUse(this);
 
@@ -102,6 +106,7 @@ class DarukCore extends Koa {
       self.prettyLog('[koa error] ' + (err.stack || err.message), { level: 'error' });
     });
     this.router = new Router();
+    // 初始化路由，中间件，服务，工具函数等
     this.initEnv();
   }
   /**
@@ -161,7 +166,7 @@ class DarukCore extends Koa {
     this.register('service', des);
   }
   /**
-   * @desc 注入 glue
+   * @desc 注入 glue 胶水
    */
   public registerGlue(des: Daruk.RegisterDes | Array<Daruk.RegisterDes>) {
     this.register('glue', des);
@@ -297,6 +302,7 @@ class DarukCore extends Koa {
    * @desc 监听进程退出，打印日志，触发 exit 事件
    */
   private initExitHook() {
+    // daruk-exit-hook
     this.exitHook = new ExitHook({
       onExit: (err: Error) => {
         if (err) {

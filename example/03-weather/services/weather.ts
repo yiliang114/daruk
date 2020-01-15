@@ -20,9 +20,7 @@ export default class Weather extends BaseService {
     let latlong = await this.getLatLong(ip);
     latlong = latlong.replace(/"/g, '');
     latlong = latlong.split(',');
-    let weatherAPI = `http://api.openweathermap.org/data/2.5/weather?lat=${latlong[0]}&lon=${
-      latlong[1]
-    }&appid=${API_KEY}`;
+    let weatherAPI = `http://api.openweathermap.org/data/2.5/weather?lat=${latlong[0]}&lon=${latlong[1]}&appid=${API_KEY}`;
     return await request(weatherAPI);
   }
 }

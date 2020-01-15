@@ -16,12 +16,14 @@ const isFn = is.fn;
 const isObj = is.object;
 
 /**
+ * 通过 loader 实例去加载约定的目录文件下的配置，比如 config, util 等
  * @desc daruk loader 类
  */
 class DarukLoader {
   public app: Daruk.DarukCore;
 
   public constructor(app: Daruk.DarukCore) {
+    // 存储一个 daruk 实例
     this.app = app;
   }
   /**
@@ -30,14 +32,16 @@ class DarukLoader {
   public loadConfig(path: string) {
     this.loadModuleSimple('config', path);
   }
+  // TODO: 普通的 config 与 daruk 配置有何不同 ？
   /**
-   * @desc 加载 daruk 配置
+   * @desc 加载 daruk 配置。
    */
   public loadDarukConfig(path: string) {
     // 在 ts 的 dev 环境，文件名是 daruk.config.ts
     if (!fs.existsSync(path + '.js') && !fs.existsSync(path + '.ts')) return;
     const mod = uRequire(path);
     assert(isFn(mod), `DarukConfig must export a function, ${path}`);
+    // DarukConfig 必须只能是一个函数
     const DarukConfig = mod(this.app);
     // daruk config 支持的配置类型
     const validConfigKey = ['util', 'timer', 'middleware', 'middlewareOrder', 'globalModule'];
@@ -45,11 +49,14 @@ class DarukLoader {
       if (!DarukConfig[key]) return;
       // 特殊处理 middleware
       if (key === 'middleware') {
+        // 加载 daruk.config 配置的中间件
         this.loadDarukConfigMid(DarukConfig[key]);
         return;
       }
       // 特殊处理 middlewareOrder
       if (key === 'middlewareOrder') {
+        // TODO: 此时的  DarukConfig[key] 一定是一个数组
+        // 保存数据类型的模块到 this.module[type] = arr
         this.app.setArrayModule('middlewareOrder', DarukConfig[key]);
         return;
       }
@@ -172,8 +179,11 @@ class DarukLoader {
   private loadModuleSimple(type: string, path: string) {
     // 这里 load 的是文件夹，所以可以直接判断路径是否存在
     if (!fs.existsSync(path)) return;
+    // 同时支持导入 es6 模块和 common.js 模块
     const mod = uRequire(path);
+    // 导出模块必须是一个对象或者函数
     assert(isFn(mod) || isObj(mod), `${type} must export a function or object in path: ${path}`);
+    // TODO: 可以直接优化成 this.app.mergeModule(type, isObj(mod) ? { ...mod } : mod(this.app));
     if (isObj(mod)) {
       this.app.mergeModule(type, { ...mod });
     } else if (isFn(mod)) {

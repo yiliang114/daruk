@@ -10,7 +10,8 @@ export default class Index extends BaseController {
   @middleware('cors')
   @get('/')
   public async index(ctx: Context, next: Function) {
-    await ctx.service.weather.getWeather()
+    await ctx.service.weather
+      .getWeather()
       .then((weather: string) => {
         ctx.body = `Hi, ${this.author}, project version is ${this.version},
                 Today is ${this.getToday()}, weather is ${weather}`;

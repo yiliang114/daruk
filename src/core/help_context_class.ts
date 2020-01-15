@@ -19,7 +19,7 @@ export default class HelpContextClass {
     this._serviceCache = {};
 
     // tslint:disable-next-line
-    const self = this
+    const self = this;
     Object.keys(services).forEach(function definePropertyForServices(serviceName) {
       Object.defineProperty(self, serviceName, {
         get() {

@@ -11,10 +11,14 @@ export default function getDefaultOptions(rootPath: string, name: string, debug:
     servicePath: join(rootPath, 'services'),
     gluePath: join(rootPath, 'glues'),
     timerPath: join(rootPath, 'timers'),
+    // 默认的中间件路径
     middlewarePath: join(rootPath, 'middlewares'),
+    // 默认的控制层的路径
     controllerPath: join(rootPath, 'controllers'),
     utilPath: join(rootPath, 'utils'),
+    // 默认的 daruk 配置文件是根目录下面的 daruk.config.js or daruk.config.ts 文件
     darukConfigPath: join(rootPath, 'daruk.config'),
+    // 默认的 config 配置文件路径
     configPath: join(rootPath, 'config'),
     bodyOptions: {},
     debug,
