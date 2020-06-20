@@ -1,5 +1,5 @@
 /**
- * @fileOverview 初始化timer
+ * @fileOverview 初始化 timer
  */
 
 import { CronJob } from 'cron';
@@ -21,10 +21,10 @@ class Timer implements PluginClass {
           job.initTimer(daruk);
           let instance: CronJob = new CronJob(
             job.cronTime,
-            function() {
+            function () {
               job.onTick(this, daruk);
             },
-            function() {
+            function () {
               job.onComplete(this, daruk);
             },
             job.start || true,

@@ -7,6 +7,7 @@ import { Constructor, PluginClass, TimerClass } from '../typings/daruk';
 
 export function plugin() {
   return (target: Constructor) => {
+    // 往构造函数注入一个依赖。 bind 的值是一个 Symbol.for 值
     darukContainer.bind<PluginClass>(TYPES.PLUGINCLASS).to(target);
   };
 }

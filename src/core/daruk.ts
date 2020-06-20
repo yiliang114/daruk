@@ -2,7 +2,7 @@
  * @author xiaojue
  * @date 20190614
  * @update 20200113
- * @fileoverview plugin化daruk core
+ * @fileoverview plugin 化 daruk core
  */
 import KoaLogger = require('daruk-logger');
 import { EventEmitter } from 'events';
@@ -27,7 +27,9 @@ class Daruk extends EventEmitter {
   public httpServer: Server;
   public logger: KoaLogger.logger;
   public options: Options;
+
   public initOptions(options: PartialOptions = {}) {
+    // require.main.filename：用 node 命令启动的 module 的 filename, 如 node xxx，这里的 filename 就是这个 xxx。
     const rootPath = options.rootPath || dirname(require.main.filename);
     const defaultOptions = getDefaultOptions(rootPath, options.name, options.debug);
     const customLogger = options.customLogger;
@@ -38,7 +40,7 @@ class Daruk extends EventEmitter {
     this.options.customLogger = options.customLogger = customLogger;
     // 初始化 logger
     this.logger = customLogger || new KoaLogger.logger(this.options.loggerOptions);
-    // 用于保存 DarukLoader 加载的模块
+    // 用于保存 DarukLoader 加载的模块。 daruk.app 是一个 koa 实例
     this.app = new Koa();
     // tslint:disable-next-line
     const self = this;
@@ -46,6 +48,7 @@ class Daruk extends EventEmitter {
     this.app.on('error', function handleKoaError(err: Error) {
       self.prettyLog('[koa error] ' + (err.stack || err.message), { level: 'error' });
     });
+    // 感觉是用来触发钩子的，用来打日志
     this.emit('initOptions');
   }
   public async loadFile(path: string) {
@@ -54,9 +57,12 @@ class Daruk extends EventEmitter {
   public async initPlugin() {
     await this._loadFile(join(__dirname, '../plugins'));
     await this._loadFile(join(__dirname, '../built_in'));
+    // TODO: 获取所有插件的类型 ？
     const plugins = darukContainer.getAll<PluginClass>(TYPES.PLUGINCLASS);
     for (let plugin of plugins) {
+      // 初始化每一个插件，调用每一个插件的 initPlugin 函数
       let retValue = await plugin.initPlugin(this);
+      // TODO:
       if (darukContainer.isBoundNamed(TYPES.PluginInstance, plugin.constructor.name)) {
         darukContainer
           .rebind(TYPES.PluginInstance)
@@ -70,6 +76,7 @@ class Daruk extends EventEmitter {
       }
     }
     this.emit('init');
+    // TODO: 创建 provider 的模块 ？
     darukContainer.load(buildProviderModule());
   }
   /**
@@ -101,6 +108,7 @@ class Daruk extends EventEmitter {
   public listen(handle: any, listeningListener?: () => void): Server;
   public listen(options: ListenOptions, listeningListener?: () => void): Server;
   public listen(): Server {
+    // TODO: 没有搞明白
     this.httpServer = this.app.listen.apply(this.app, Array.prototype.slice.call(arguments, 0));
     this.emit('serverReady');
     return this.httpServer;

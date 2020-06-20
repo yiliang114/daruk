@@ -1,7 +1,7 @@
 /**
  * @author xiaojue
  * @date 2020-01-15
- * @fileoverview 重构router部分,使用依赖控制controller
+ * @fileoverview 重构 router 部分,使用依赖控制 controller
  */
 import assert = require('assert');
 import { injectable } from 'inversify';

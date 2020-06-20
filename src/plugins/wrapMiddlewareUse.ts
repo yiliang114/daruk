@@ -15,6 +15,7 @@ class WrapMiddlewareUse implements PluginClass {
   public async initPlugin(daruk: Daruk) {
     const midNames: string[] = [];
     const WRAP_MIDDLEWARE_USE = 'WRAP_MIDDLEWARE_USE';
+
     function wrapUse(fn: Function, name: string) {
       let f = async (ctx: DarukContext, next: Next) => {
         enterMid(ctx);
@@ -54,6 +55,7 @@ class WrapMiddlewareUse implements PluginClass {
         });
         data.sum = sum / ns2ms;
         ctx.middleware_perf = data;
+        // 计算完所有中间件的耗时之后，触发 access 时间
         daruk.emit('access', ctx);
       }
     }
@@ -76,10 +78,13 @@ class WrapMiddlewareUse implements PluginClass {
       return convertHrtime(process.hrtime()).nanoseconds;
     }
 
+    // TODO: app 的类型为什么要这么写 ？
     function wrapMiddleware(app: Daruk['app']) {
       const use = app.use;
+      // 包裹一下 koa.use
       // @ts-ignore
       app.use = function wrappedKoaUse(fn: Function, name: string) {
+        // 只记录 中间件的名称， length
         midNames.push(name || 'index_' + midNames.length);
         return use.call(app, wrapUse(fn, name));
       };
@@ -93,6 +98,7 @@ class WrapMiddlewareUse implements PluginClass {
       daruk.logger.access(access_log, ctx);
     });
 
+    // daruk.app 是一个 koa 实例
     wrapMiddleware(daruk.app);
   }
 }

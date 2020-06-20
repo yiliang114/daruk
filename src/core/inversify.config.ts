@@ -1,3 +1,4 @@
+// TODO: 依赖注入 https://juejin.im/post/5d4b812fe51d4561cb5dde51
 import { Container } from 'inversify';
 import getDecorators from 'inversify-inject-decorators';
 import Daruk from './daruk';

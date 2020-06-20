@@ -8,8 +8,9 @@ import Daruk from '../core/daruk';
 import { plugin } from '../decorators';
 import { PluginClass } from '../typings/daruk';
 
-@plugin()
-@injectable()
+// 退出钩子
+@plugin() // 装饰 DarukExitHook 是一个插件类
+@injectable() // 需要依赖注入
 class DarukExitHook implements PluginClass {
   public async initPlugin(daruk: Daruk) {
     let exitHook = new ExitHook({

@@ -19,6 +19,7 @@ export function controller() {
   };
 }
 
+// 优先级
 export function priority(priority: number) {
   return (target: Constructor) => {
     Reflect.defineMetadata(CONTROLLER_PRIORITY, priority, target);

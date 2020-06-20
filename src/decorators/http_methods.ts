@@ -18,6 +18,8 @@ function createMethodDecorator(method: string) {
       const funcs = Reflect.getMetadata(CONTROLLER_FUNC_NAME, target) || [];
       // 加入当前方法名
       funcs.push(propertyKey);
+      // 在对象上面定义元数据
+      // defineMetadata(key, value, originObj, property?): void
       // 保存该类中被装饰过的方法
       Reflect.defineMetadata(CONTROLLER_FUNC_NAME, funcs, target);
       let routerMetas = Reflect.getMetadata(CONTROLLER_PATH, target, propertyKey) || [];
@@ -31,19 +33,11 @@ function createMethodDecorator(method: string) {
 }
 
 // 导出 http method 装饰器
-
 export const post = createMethodDecorator('post');
-
 export const get = createMethodDecorator('get');
-
 export const del = createMethodDecorator('del');
-
 export const put = createMethodDecorator('put');
-
 export const patch = createMethodDecorator('patch');
-
 export const options = createMethodDecorator('options');
-
 export const head = createMethodDecorator('head');
-
 export const all = createMethodDecorator('all');
