@@ -11,6 +11,8 @@ export * from './typings/daruk';
 // TODO: 定时程序
 export { CronJob } from 'cron';
 // core
-import Daruk from './core/daruk';
-// TODO: 可以优化成 export { default as Daruk } from './core/daruk'
-export { Daruk };
+// import Daruk from './core/daruk';
+// // TODO: 可以优化成 export { default as Daruk } from './core/daruk'
+// export { Daruk };
+
+export { default as Daruk } from './core/daruk';
